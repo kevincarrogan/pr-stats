@@ -1,34 +1,13 @@
 import argparse
-import os
 
 from collections import defaultdict
-from datetime import datetime, timedelta
 
-from github import Github
+from reviews import get_reviews
+from utils import get_closed_at
 
-
-GITHUB_PAT = os.environ["GITHUB_PAT"]
-
-
-github = Github(login_or_token=GITHUB_PAT)
-
-
-def get_reviews(repo, base, closed_at):
-    reviews = defaultdict(int)
-    pulls = github.get_repo(repo).get_pulls(base=base, state="closed")
-    for pull in pulls:
-        if pull.closed_at <= closed_at:
-            return reviews
-        
-        for review in pull.get_reviews():
-            if review.state != "APPROVED":
-                continue
-            reviews[review.user.login] += 1
-    
-    return reviews
 
 def get_leaderboard(repos, closed_in_last_n_days):
-    closed_at = datetime.now() - timedelta(days=closed_in_last_n_days)
+    closed_at = get_closed_at(closed_in_last_n_days)
 
     reviews = defaultdict(int)
 
