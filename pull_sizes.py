@@ -48,7 +48,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     closed_at = get_closed_at(args.last_days)
     repos = get_repos_with_bases(args.repos)
-    print(f"Pull open to closed times in {args.last_days} days")
+    print(f"Pull sizes in last {args.last_days} days")
     times = get_sizes(repos, closed_at)
     print(tabulate(times, headers=[
         "Smallest",
