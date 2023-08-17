@@ -31,7 +31,7 @@ def get_quality(repos, closed_at):
             total["comments"] / total["reviews"],
         ))
 
-    return sorted(averages, key=lambda x: x[1], reverse=True)
+    return sorted(averages, key=lambda x: x[3], reverse=True)
 
 
 if __name__ == "__main__":
