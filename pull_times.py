@@ -36,7 +36,7 @@ def get_times(repos, closed_at):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Review quality")
+    parser = argparse.ArgumentParser(description="Pull times")
     parser.add_argument(
         "--last-days",
         type=int,
