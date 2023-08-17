@@ -2,6 +2,8 @@ import argparse
 
 from collections import defaultdict
 
+from tabulate import tabulate
+
 from reviews import get_reviews
 from utils import get_closed_at, get_repos_with_bases
 
@@ -36,5 +38,5 @@ if __name__ == "__main__":
     print(f"Approvals for PRs closed in the last {args.last_days} days")
     closed_at = get_closed_at(args.last_days)
     repos = get_repos_with_bases(args.repos)
-    for username, score in get_leaderboard(repos, closed_at):
-        print(f"{username:<20}: {score}")
+    leaderboard = get_leaderboard(repos, closed_at)
+    print(tabulate(leaderboard, headers=["Username", "Approvals"]))

@@ -2,6 +2,8 @@ import argparse
 
 from collections import defaultdict
 
+from tabulate import tabulate
+
 from reviews import get_comments, get_reviews
 from utils import get_closed_at, get_repos_with_bases
 
@@ -46,5 +48,5 @@ if __name__ == "__main__":
     print(f"Average comments per review for PRs closed in the last {args.last_days} days")
     closed_at = get_closed_at(args.last_days)
     repos = get_repos_with_bases(args.repos)
-    for username, average in get_quality(repos, closed_at):
-        print(f"{username:<20}: {average:.2f}")
+    quality = get_quality(repos, closed_at)
+    print(tabulate(quality, headers=["Username", "Comments per review"]))
