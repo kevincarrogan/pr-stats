@@ -3,27 +3,18 @@ import argparse
 from collections import defaultdict
 
 from reviews import get_reviews
-from utils import get_closed_at
+from utils import get_closed_at, get_repos_with_bases
 
 
-def get_leaderboard(repos, closed_in_last_n_days):
-    closed_at = get_closed_at(closed_in_last_n_days)
-
+def get_leaderboard(repos, closed_at):
     reviews = defaultdict(int)
 
-    for config in repos:
-        repo, base = config.split(":")
+    for repo, base in repos:
         count_by_username = get_reviews(repo, base, closed_at)
         for username, count in count_by_username.items():
             reviews[username] += count
 
-    leaderboard = []
-    for username, reviews in reviews.items():
-        leaderboard.append(
-            (username, reviews),
-        )
-
-    return sorted(leaderboard, key=lambda x: x[1], reverse=True)
+    return sorted(reviews.items(), key=lambda x: x[1], reverse=True)
 
 
 if __name__ == "__main__":
@@ -43,5 +34,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     print(f"Approvals for PRs closed in the last {args.last_days} days")
-    for username, score in get_leaderboard(args.repos, args.last_days):
+    closed_at = get_closed_at(args.last_days)
+    repos = get_repos_with_bases(args.repos)
+    for username, score in get_leaderboard(repos, closed_at):
         print(f"{username:<20}: {score}")
