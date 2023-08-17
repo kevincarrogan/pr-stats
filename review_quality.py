@@ -3,17 +3,13 @@ import argparse
 from collections import defaultdict
 
 from reviews import get_comments, get_reviews
-from utils import get_closed_at
+from utils import get_closed_at, get_repos_with_bases
 
 
-def get_quality(repos, closed_in_last_n_days):
-    closed_at = get_closed_at(closed_in_last_n_days)
-
+def get_quality(repos, closed_at):
     totals = defaultdict(lambda: {"reviews": 0, "comments": 0})
 
-    for config in repos:
-        repo, base = config.split(":")
-
+    for repo, base in repos:
         review_count_by_username = get_reviews(repo, base, closed_at)
         for username, count in review_count_by_username.items():
             totals[username]["reviews"] += count
@@ -29,7 +25,6 @@ def get_quality(repos, closed_in_last_n_days):
         averages.append((username, total["comments"] / total["reviews"]))
 
     return sorted(averages, key=lambda x: x[1], reverse=True)
-
 
 
 if __name__ == "__main__":
@@ -49,5 +44,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     print(f"Average comments per review for PRs closed in the last {args.last_days} days")
-    for username, average in get_quality(args.repos, args.last_days):
+    closed_at = get_closed_at(args.last_days)
+    repos = get_repos_with_bases(args.repos)
+    for username, average in get_quality(repos, closed_at):
         print(f"{username:<20}: {average:.2f}")
