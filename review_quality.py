@@ -24,7 +24,12 @@ def get_quality(repos, closed_at):
     for username, total in totals.items():
         if total["reviews"] == 0:
             continue
-        averages.append((username, total["comments"] / total["reviews"]))
+        averages.append((
+            username, 
+            total["comments"],
+            total["reviews"],
+            total["comments"] / total["reviews"],
+        ))
 
     return sorted(averages, key=lambda x: x[1], reverse=True)
 
@@ -49,4 +54,4 @@ if __name__ == "__main__":
     closed_at = get_closed_at(args.last_days)
     repos = get_repos_with_bases(args.repos)
     quality = get_quality(repos, closed_at)
-    print(tabulate(quality, headers=["Username", "Comments per review"]))
+    print(tabulate(quality, headers=["Username", "Comments", "Reviews", "Comments per review"]))
