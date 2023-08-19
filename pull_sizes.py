@@ -3,7 +3,7 @@ import numpy
 
 from tabulate import tabulate
 
-from pulls import get_pulls
+from pulls import get_pulls, get_size
 from utils import get_closed_at, get_repos_with_bases
 
 
@@ -14,7 +14,7 @@ def get_sizes(repos, closed_at):
         for pull in pulls:
             if not pull.is_merged():
                 continue
-            size = pull.additions + pull.deletions
+            size = get_size(pull)
             sizes.append(size)
 
     sizes = numpy.array(sizes)

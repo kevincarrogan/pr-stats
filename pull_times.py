@@ -3,12 +3,8 @@ import numpy
 
 from tabulate import tabulate
 
-from pulls import get_pulls
+from pulls import get_pulls, get_time_open
 from utils import get_closed_at, get_repos_with_bases
-
-
-def delta_to_days(delta):
-    return delta.total_seconds() / 60 / 60 / 24
 
 
 def get_times(repos, closed_at):
@@ -18,8 +14,7 @@ def get_times(repos, closed_at):
         for pull in pulls:
             if not pull.is_merged():
                 continue
-            delta = pull.closed_at - pull.created_at
-            days = delta_to_days(delta)
+            days = get_time_open(pull)
             deltas.append(days)
 
     deltas = numpy.array(deltas)
