@@ -54,8 +54,8 @@ if __name__ == "__main__":
         "Shortest (days)",
         "Longest (days)",
         "Average (days)",
-        "Median (days)",
-        "90th",
-        "95th",
+        "Median / 50th (days)",
+        "90th (days)",
+        "95th (days)",
         "Std dev",
     ]))
