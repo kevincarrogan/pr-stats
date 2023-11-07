@@ -15,6 +15,10 @@ def get_reviews(repo, base, closed_at):
     return reviews
 
 
+def is_comment_below_threshold(comment_body):
+    return len(comment_body.split(" ")) <= 5
+
+
 def get_comments(repo, base, closed_at):
     comments = defaultdict(int)
     pulls = get_pulls(repo, base, closed_at)
@@ -23,6 +27,8 @@ def get_comments(repo, base, closed_at):
             if comment.in_reply_to_id:
                 continue
             if pull.user.login == comment.user.login:
+                continue
+            if is_comment_below_threshold(comment.body):
                 continue
             comments[comment.user.login] += 1
     
